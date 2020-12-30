@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Dec 26 19:41:57 2020
-使用crank-nicolson方法求解BPM方程
+Created on Wed Dec 30 19:55:55 2020
+分束器
 @author: David Lyu
 """
 # -*- coding: utf-8 -*-
 """
-Created on Sat Dec 26 15:49:52 2020
-
+Created on Sat Dec 26 19:41:57 2020
+使用crank-nicolson方法求解BPM方程,波导的方向耦合器
 @author: David Lyu
 """
 
@@ -23,19 +23,19 @@ from matplotlib import pyplot as plt
 
 dx=0.1
 dz=dx
-wavelength=3
+wavelength=1.55
 k0=2*np.pi/wavelength
-nmax=1.45+1.45*0.1/2
-nmin=1.45-1.45*0.1/2
+nmax=1.45+1.45*0.0075/2
+nmin=1.45-1.45*0.0075/2
 #nmin=1.45-1.45*0.0075/2
 
-beta=k0*nmax*0.993#0.9925280199252802
+beta=k0*nmax*0.9935#0.9925280199252802
 betaa=0
 
-lx=100
-lz=1500
+lx=200
+lz=800
 d=3
-dsourse=lx/10    #光束宽度
+dsourse=lx/13    #光束宽度
 dwaveguide=lx/5        #波导宽度
 
 phi=np.zeros((lx,lz),dtype=complex)
@@ -68,16 +68,18 @@ def sinn(x):
 alpha=0.05
 
 #设定折射率的区域
+theta=0.1
+d=200
 for x in range(0,lx):
     for z in range(0,lz):
-        if (x<=lx/2+dwaveguide/2)and(x>=lx/2-dwaveguide/2):
+        if (lx/2-dwaveguide/2<=x<=lx/2+dwaveguide/2)and  (z<=d):
+            n[x,z]=nmax
+        elif (-theta*(z-d)-dwaveguide/2<=x-lx/2<=-theta*(z-d)+dwaveguide/2)and(z>=d):
+            n[x,z]=nmax
+        elif (theta*(z-d)-dwaveguide/2<=x-lx/2<=theta*(z-d)+dwaveguide/2)and(z>=d):
             n[x,z]=nmax
         else:
             n[x,z]=nmin
-        if (x>=lx/2+dwaveguide/2+d)and(x<=lx/2+dwaveguide/2+dwaveguide+d):
-            n[x,z]=nmax
-        else:
-            n[x,z]=n[x,z]
 
 for t in range(0,1):
     #设定光源
@@ -117,14 +119,17 @@ for t in range(0,1):
                 n[x,z]=1
 """
 abspsi=abs(psi)
-plt.figure(figsize = (16, 8))
-#plt.subplot(2,1,1)
-#plt.imshow(np.real(psi),cmap='gray',vmin=-1, vmax=1)
-#plt.subplot(2,2,2)
-#plt.imshow(abs(phi),cmap='gray',vmin=0, vmax=1)
+plt.figure(figsize = (16, 9))
+"""
+plt.subplot(2,2,1)
+plt.imshow(np.real(psi),cmap='gray',vmin=-1, vmax=1)
+plt.subplot(2,2,2)
+plt.imshow(abs(phi),cmap='gray',vmin=0, vmax=1)
 #plt.plot(range(0,lx),abs(psi[:,lz-1]))
+"""
 plt.subplot(2,1,1)
 plt.imshow(abs(psi),cmap='gray',vmin=0, vmax=1)
 plt.subplot(2,1,2)
 plt.imshow(n,cmap='gray')
     
+

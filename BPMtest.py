@@ -15,7 +15,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from pylab import *
 
-dx=1
+dx=0.1
 dz=dx
 wavelength=1.55
 k0=2*np.pi/wavelength
@@ -27,9 +27,9 @@ beta=k0*nmax*0.993#0.9925280199252802
 betaa=0
 
 
-lx=60
-lz=100
-d=4
+lx=50
+lz=500
+d=1
 dsourse=lx/20     #光束宽度
 dwaveguide=lx/10        #波导宽度
 
