@@ -21,12 +21,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-dx=0.1
+dx=0.11
 dz=dx
 wavelength=3
 k0=2*np.pi/wavelength
-nmax=1.45+1.45*0.1/2
-nmin=1.45-1.45*0.1/2
+nmax=1.45+1.45*0.075/2
+nmin=1.45-1.45*0.075/2
 #nmin=1.45-1.45*0.0075/2
 
 beta=k0*nmax*0.993#0.9925280199252802
