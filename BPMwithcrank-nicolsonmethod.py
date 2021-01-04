@@ -23,17 +23,17 @@ from matplotlib import pyplot as plt
 
 dx=0.11
 dz=dx
-wavelength=3
+wavelength=1.55
 k0=2*np.pi/wavelength
-nmax=1.45+1.45*0.075/2
-nmin=1.45-1.45*0.075/2
+nmax=1.45+1.45*0.0075/2
+nmin=1.45-1.45*0.0075/2
 #nmin=1.45-1.45*0.0075/2
 
 beta=k0*nmax*0.993#0.9925280199252802
 betaa=0
 
 lx=100
-lz=1500
+lz= 500
 d=3
 dsourse=lx/10    #光束宽度
 dwaveguide=lx/5        #波导宽度
@@ -48,7 +48,7 @@ c=np.zeros((lx),dtype=complex)
 p=np.zeros((lx-2,lx-2),dtype=complex)
 q=np.zeros((lx-2,lx-2),dtype=complex)
 aa=np.zeros((lx-2,lx-2),dtype=complex)
-aaa=np.zeros((lx-2,lx-2),dtype=complex)
+
 
 n=np.zeros((lx,lz))
 nn=np.zeros((lx,lz))
@@ -74,10 +74,12 @@ for x in range(0,lx):
             n[x,z]=nmax
         else:
             n[x,z]=nmin
+        """
         if (x>=lx/2+dwaveguide/2+d)and(x<=lx/2+dwaveguide/2+dwaveguide+d):
             n[x,z]=nmax
         else:
             n[x,z]=n[x,z]
+        """
 
 for t in range(0,1):
     #设定光源
@@ -95,14 +97,17 @@ for t in range(0,1):
         c[:]=2*beta-j*dz/dx/dx+j*k0*k0*(n[:,z]**2-(beta/k0)**2)/2
         a[:]=j*dz/dx/dx/2
         p[:,:]=np.diag(b[1:lx-1])
+        q[:,:]=np.diag(c[1:lx-1])
         aa[:,:]=np.diag(a[1:lx-1])
         aa[:,:]=np.vstack((aa[1:,:],np.zeros((lx-2),dtype=complex)))
+        p-=aa
+        q+=aa
+        aa[:,:]=np.diag(a[1:lx-1])
+        aa[:,:]=np.hstack((aa[:,1:],np.zeros((lx-2,1),dtype=complex)))
+        p-=aa
+        q+=aa
         
-        aaa[:,:]=np.diag(a[1:lx-1])
-        aaa[:,:]=np.hstack((aaa[:,1:],np.zeros((lx-2,1),dtype=complex)))
-        p=p-aa-aaa
-        q[:,:]=np.diag(c[1:lx-1])
-        q=q+aa+aaa
+        
         psi[1:lx-1,z+1]=(np.linalg.inv(p)).dot(q.dot(psi[1:lx-1,z]))
     phi=np.fliplr(phi)
 """
@@ -117,14 +122,14 @@ for t in range(0,1):
                 n[x,z]=1
 """
 abspsi=abs(psi)
-plt.figure(figsize = (16, 8))
-#plt.subplot(2,1,1)
-#plt.imshow(np.real(psi),cmap='gray',vmin=-1, vmax=1)
+plt.figure(figsize = (12, 8))
+plt.subplot(3,1,1)
+plt.imshow(np.real(psi),cmap='gray',vmin=-1, vmax=1)
 #plt.subplot(2,2,2)
 #plt.imshow(abs(phi),cmap='gray',vmin=0, vmax=1)
 #plt.plot(range(0,lx),abs(psi[:,lz-1]))
-plt.subplot(2,1,1)
+plt.subplot(3,1,2)
 plt.imshow(abs(psi),cmap='gray',vmin=0, vmax=1)
-plt.subplot(2,1,2)
+plt.subplot(3,1,3)
 plt.imshow(n,cmap='gray')
     

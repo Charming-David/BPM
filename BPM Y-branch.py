@@ -97,14 +97,17 @@ for t in range(0,1):
         c[:]=2*beta-j*dz/dx/dx+j*k0*k0*(n[:,z]**2-(beta/k0)**2)/2
         a[:]=j*dz/dx/dx/2
         p[:,:]=np.diag(b[1:lx-1])
+        q[:,:]=np.diag(c[1:lx-1])
         aa[:,:]=np.diag(a[1:lx-1])
         aa[:,:]=np.vstack((aa[1:,:],np.zeros((lx-2),dtype=complex)))
+        p-=aa
+        q+=aa
+        aa[:,:]=np.diag(a[1:lx-1])
+        aa[:,:]=np.hstack((aa[:,1:],np.zeros((lx-2,1),dtype=complex)))
+        p-=aa
+        q+=aa
         
-        aaa[:,:]=np.diag(a[1:lx-1])
-        aaa[:,:]=np.hstack((aaa[:,1:],np.zeros((lx-2,1),dtype=complex)))
-        p=p-aa-aaa
-        q[:,:]=np.diag(c[1:lx-1])
-        q=q+aa+aaa
+        
         psi[1:lx-1,z+1]=(np.linalg.inv(p)).dot(q.dot(psi[1:lx-1,z]))
     phi=np.fliplr(phi)
 """

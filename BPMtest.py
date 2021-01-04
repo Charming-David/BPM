@@ -15,7 +15,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from pylab import *
 
-dx=0.1
+dx=1
 dz=dx
 wavelength=1.55
 k0=2*np.pi/wavelength
@@ -60,10 +60,12 @@ for x in range(0,lx):
             n[x,z]=nmax
         else:
             n[x,z]=nmin
+        """
         if (x>lx/2+d)and(x<lx/2+dwaveguide+d):
             n[x,z]=nmax
         else:
             n[x,z]=n[x,z]
+        """
 
 for t in range(0,1):
 
